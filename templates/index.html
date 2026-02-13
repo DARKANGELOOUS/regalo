@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PARA EL AMORCITO DE MI VIDA</title>
+    
+    <link rel="icon" href="/static/favicon.png" type="image/png">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Caveat:wght@500&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        .handwritten { font-family: 'Dancing Script', cursive; }
+        .letter-font { font-family: 'Caveat', cursive; font-size: 1.5rem; line-height: 1.2; }
+        body { font-family: 'Inter', sans-serif; background: #fff0f3; scroll-behavior: smooth; overflow-x: hidden; position: relative; }
+        .glass { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.5); }
+        
+        /* --- ESTILOS GENERALES --- */
+        .polaroid { 
+            background: white; padding: 12px; padding-bottom: 50px; 
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); border-radius: 4px;
+        }
+        .polaroid:hover { transform: scale(1.03); z-index: 20; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); }
+
+        /* --- CUPONES FLIP 3D --- */
+        .coupon-container { perspective: 1000px; height: 220px; cursor: pointer; }
+        .coupon-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.8s; transform-style: preserve-3d; border-radius: 1rem; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .coupon-container.redeemed .coupon-inner { transform: rotateY(180deg); }
+        .coupon-front, .coupon-back { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; border-radius: 1rem; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1rem; }
+        .coupon-front { background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%); border: 4px solid #fff; outline: 2px dashed #f472b6; }
+        .coupon-back { background: white; transform: rotateY(180deg); border: 2px dashed #f472b6; }
+        .stamp { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-20deg) scale(0); border: 4px solid #ef4444; color: #ef4444; font-weight: bold; font-size: 1.8rem; padding: 0.5rem 1rem; opacity: 0; transition: all 0.4s ease 0.5s; background: rgba(255,255,255,0.8); }
+        .coupon-container.redeemed .stamp { opacity: 1; transform: translate(-50%, -50%) rotate(-20deg) scale(1); }
+
+        /* --- FONDO Y CORAZONES --- */
+        #hearts-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
+        .falling-heart { position: absolute; top: -10vh; color: #fce7f3; font-size: 24px; text-shadow: 0 0 5px #ef4444, 0 0 10px #dc2626; opacity: 0.9; animation: fall linear forwards; pointer-events: none; }
+        .special-heart { color: #fff1f2; text-shadow: 0 0 10px #fbbf24, 0 0 20px #f59e0b; cursor: pointer; pointer-events: auto !important; z-index: 50; font-size: 35px; animation: fall-special linear forwards; }
+        .special-heart:hover { transform: scale(1.2); }
+        @keyframes fall { 0% { transform: translateY(0) rotate(0deg) scale(0.8); opacity: 0; } 10% { opacity: 1; } 100% { transform: translateY(110vh) rotate(360deg) scale(1); opacity: 0; } }
+        @keyframes fall-special { 0% { transform: translateY(0) rotate(0deg) scale(1); opacity: 0; } 10% { opacity: 1; } 50% { transform: translateY(50vh) rotate(180deg) scale(1.2); } 100% { transform: translateY(110vh) rotate(360deg) scale(1); opacity: 0; } }
+
+        /* --- CORAZÓN PRINCIPAL GLOW --- */
+        .heart-mask {
+            mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='black'><path d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/></svg>");
+            -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='black'><path d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/></svg>");
+            mask-size: contain; -webkit-mask-size: contain; mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat; mask-position: center; -webkit-mask-position: center;
+            filter: drop-shadow(0 0 8px #ef4444) drop-shadow(0 0 15px #b91c1c); transition: filter 0.3s ease;
+        }
+        .heart-mask:hover { filter: drop-shadow(0 0 12px #ef4444) drop-shadow(0 0 25px #ff0000); transform: scale(1.05); }
+
+        /* --- MODAL --- */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); z-index: 100; display: none; align-items: center; justify-content: center; }
+        .modal-content { background: white; padding: 2.5rem; border-radius: 1.5rem; max-width: 90%; width: 400px; text-align: center; border: 4px solid #f9a8d4; box-shadow: 0 0 30px rgba(236,72,153,0.6); }
+        .modal-open { display: flex; animation: fadeIn 0.3s ease; }
+        
+        /* --- SOBRES (CORREGIDOS) --- */
+        .envelope-wrapper { position: relative; width: 300px; height: 200px; margin: 0 auto; cursor: pointer; transition: transform 0.3s; }
+        /* Clase especial para la carta final más grande */
+        .envelope-wrapper.giant { width: 360px; height: 240px; }
+
+        .envelope-back { position: absolute; bottom: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #f9a8d4, #f472b6); border-radius: 0 0 10px 10px; z-index: 1; }
+
+        /* ESTADO CERRADO (GENÉRICO) */
+        .letter {
+            position: absolute; top: 10px; left: 5%; width: 90%;
+            height: 180px; /* Altura fija que cabe dentro del sobre estándar */
+            background-color: #fff; z-index: 2; padding: 20px; text-align: center; transition: 0.8s ease; display: flex; align-items: center; justify-content: center; border-radius: 5px;
+            overflow: hidden; /* CRUCIAL: Ocultar el texto que sobra cuando está cerrada */
+        }
+        /* ESTADO CERRADO (GIGANTE) - Ajustar altura para que quepa */
+        .envelope-wrapper.giant .letter {
+            height: 220px; /* Altura fija que cabe dentro del sobre gigante */
+            font-size: 1.2rem;
+        }
+
+        .envelope-front-pocket { position: absolute; bottom: 0; width: 100%; height: 80%; background-color: #f472b6; z-index: 3; clip-path: polygon(0 0, 50% 40%, 100% 0, 100% 100%, 0 100%); border-radius: 0 0 10px 10px; }
+        .envelope-flap { position: absolute; top: 0; width: 100%; height: 100px; background-color: #ec4899; z-index: 4; clip-path: polygon(0 0, 100% 0, 50% 60%); transform-origin: top; transition: 0.6s; }
+        .seal { position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%); width: 45px; height: 45px; background: #be185d; border-radius: 50%; z-index: 10; display: flex; align-items: center; justify-content: center; color: white; }
+        
+        /* --- ESTADOS ABIERTOS --- */
+        .open .envelope-flap { transform: rotateX(180deg); z-index: 0; }
+        .open .seal { display: none; }
+        
+        /* Abierto Estándar */
+        .open .letter {
+            transform: translateY(-130px); z-index: 5;
+            height: auto; /* Dejar que crezca */
+            min-height: 220px; /* Altura mínima al abrir */
+            overflow: visible; /* Mostrar todo el contenido */
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        /* Abierto Gigante */
+        .open.giant .letter {
+            transform: translateY(-180px); /* Subir más */
+            min-height: 350px; /* Altura mínima mayor al abrir */
+        }
+
+        /* --- CARRUSEL Y TRIVIA --- */
+        .carousel-track { display: flex; transition: transform 0.5s ease-in-out; height: 100%; }
+        .carousel-slide { min-width: 100%; height: 100%; object-fit: cover; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+        .shake { animation: shake 0.3s ease-in-out; border-color: #ef4444 !important; background-color: #fee2e2 !important; }
+        .correct-anim { border-color: #22c55e !important; background-color: #dcfce7 !important; transform: scale(1.02); }
+    </style>
+</head>
+<body class="text-gray-800 relative">
+
+    <div id="hearts-container"></div>
+
+    <div id="love-modal" class="modal-overlay" onclick="closeModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="text-5xl mb-4 animate-bounce">💌</div>
+            <p id="modal-text" class="handwritten text-4xl text-pink-600 mb-6 leading-relaxed"></p>
+            <button onclick="closeModal()" class="mt-8 bg-pink-500 text-white px-8 py-2 rounded-full hover:bg-pink-600 transition font-bold shadow-lg">¡Qué lindo!</button>
+        </div>
+    </div>
+
+    <nav class="fixed top-4 w-full z-50 flex justify-center px-2">
+        <div class="glass px-4 py-2 rounded-full shadow-xl flex items-center gap-4 text-pink-600 font-bold text-lg md:text-xl">
+            <span id="dias">0</span>d : <span id="horas">00</span>h : <span id="minutos">00</span>m : <span id="segundos">00</span>s
+        </div>
+    </nav>
+
+    <main class="pt-32 pb-16 px-4 max-w-3xl mx-auto flex flex-col items-center relative z-10">
+        
+        <header class="text-center mb-12">
+            <div class="relative inline-block mb-8 group">
+                <div class="absolute -inset-4 bg-pink-300 blur-xl opacity-50 animate-pulse"></div>
+                <img src="/static/fotos/momentos/principal.webp" class="heart-mask relative w-64 h-64 md:w-80 md:h-80 object-cover mx-auto">
+            </div>
+            <h1 class="text-5xl md:text-7xl handwritten text-pink-600 mb-4 font-bold">¡Hola Amorcito!</h1>
+            <p class="text-gray-600 italic text-xl">"Eres el mejor commit que la vida ha hecho en mi repositorio" 💖</p>
+        </header>
+
+        <section class="mb-24 text-center">
+            <h3 class="handwritten text-3xl text-pink-500 mb-6">Tengo algo para decirte...</h3>
+            <div class="envelope-wrapper" onclick="abrirSobre(this, 'confeti')">
+                <div class="envelope-back"></div>
+                <div class="letter">
+                    <div class="opacity-0 transition-opacity duration-500 delay-300 letter-inner letter-font">
+                        ¡Bienvenida a nuestra historia! <br> Prepárate para revivir nuestros mejores momentos. <br> ❤️
+                    </div>
+                </div>
+                <div class="envelope-front-pocket"></div>
+                <div class="envelope-flap"></div>
+                <div class="seal">❤️</div>
+            </div>
+        </section>
+
+        <section class="w-full max-w-md mb-24 shadow-2xl rounded-[12px] overflow-hidden">
+            <iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/track/4ClMZDRwBmwGJKN6qQLVPY?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+        </section>
+
+        <section class="mb-24 w-full px-4 max-w-lg mx-auto text-center">
+            <h3 class="text-3xl handwritten text-pink-500 mb-6">Nuestros Momentos</h3>
+            <div class="polaroid bg-white p-2 rotate-1 mx-auto">
+                <div class="relative w-full h-80 overflow-hidden bg-gray-100">
+                    <div id="track1" class="carousel-track">
+                        <script>for(let i=1; i<=13; i++) document.write(`<img src="/static/fotos/momentos/momento${i}.webp" class="carousel-slide">`);</script>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="w-full max-w-md mb-24 shadow-2xl rounded-[12px] overflow-hidden">
+            <iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/track/4ClMZDRwBmwGJKN6qQLVPY?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+        </section>
+
+        <section class="mb-24 w-full px-4 max-w-lg mx-auto text-center">
+            <h3 class="text-3xl handwritten text-pink-500 mb-6">Nuestras Aventuras</h3>
+            <div class="polaroid bg-white p-2 -rotate-1 mx-auto">
+                <div class="relative w-full h-80 overflow-hidden bg-gray-100">
+                    <div id="track2" class="carousel-track">
+                        <script>for(let i=1; i<=5; i++) document.write(`<img src="/static/fotos/aventuras/aventura${i}.webp" class="carousel-slide">`);</script>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="w-full max-w-md mb-24 shadow-2xl rounded-[12px] overflow-hidden">
+            <iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/track/4ClMZDRwBmwGJKN6qQLVPY?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+        </section>
+
+        <section class="mb-24 w-full px-4 max-w-lg mx-auto text-center">
+            <h3 class="text-3xl handwritten text-pink-500 mb-6">Citas & Comida</h3>
+            <div class="polaroid bg-white p-2 rotate-2 mx-auto">
+                <div class="relative w-full h-80 overflow-hidden bg-gray-100">
+                    <div id="track3" class="carousel-track">
+                        <script>for(let i=1; i<=3; i++) document.write(`<img src="/static/fotos/comida/comida${i}.webp" class="carousel-slide">`);</script>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="w-full max-w-lg bg-white/90 p-8 rounded-3xl border-2 border-pink-200 shadow-xl mb-24 relative">
+            <div class="absolute -top-6 -left-6 text-6xl opacity-20 rotate-12">🧠</div>
+            <div class="absolute -bottom-6 -right-6 text-6xl opacity-20 -rotate-12">❤️</div>
+            <h3 class="text-4xl handwritten text-pink-600 text-center mb-8">¿Qué tanto nos conocemos?</h3>
+            <div id="quiz-container">
+                <p id="quiz-pregunta" class="text-xl font-semibold text-gray-700 mb-6 text-center"></p>
+                <div id="quiz-opciones" class="flex flex-col gap-3"></div>
+                <p id="quiz-progreso" class="text-center mt-6 text-pink-500 font-mono font-bold text-sm"></p>
+            </div>
+        </section>
+
+        <section class="mb-32 w-full px-4 max-w-5xl mx-auto text-center">
+            <h3 class="text-4xl handwritten text-pink-600 mb-4">Tus Regalos Especiales 🎁</h3>
+            <p class="text-gray-500 mb-8 italic">Haz clic para descubrir tus premios (¡Quedan guardados!)</p>
+            <div class="grid grid-cols-2 lg:grid-cols-3 gap-6">
+                
+                <div id="coupon-1" class="coupon-container" onclick="canjearCupon('coupon-1')">
+                    <div class="coupon-inner">
+                        <div class="coupon-front"><div class="text-5xl animate-pulse">💝</div><p class="mt-2 font-bold text-pink-500">Toca para abrir</p></div>
+                        <div class="coupon-back">
+                            <div class="text-5xl mb-2">💆‍♀️</div><h4 class="font-bold text-pink-600 text-lg">Masaje Relajante</h4><p class="text-xs text-gray-500">30 min de relax total.</p><div class="stamp">CANJEADO</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="coupon-2" class="coupon-container" onclick="canjearCupon('coupon-2')">
+                    <div class="coupon-inner">
+                        <div class="coupon-front"><div class="text-5xl animate-pulse">💝</div><p class="mt-2 font-bold text-pink-500">Toca para abrir</p></div>
+                        <div class="coupon-back">
+                            <div class="text-5xl mb-2">🍕</div><h4 class="font-bold text-pink-600 text-lg">Cena a Elección</h4><p class="text-xs text-gray-500">Yo invito (o cocino).</p><div class="stamp">CANJEADO</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="coupon-3" class="coupon-container" onclick="canjearCupon('coupon-3')">
+                    <div class="coupon-inner">
+                        <div class="coupon-front"><div class="text-5xl animate-pulse">💝</div><p class="mt-2 font-bold text-pink-500">Toca para abrir</p></div>
+                        <div class="coupon-back">
+                            <div class="text-5xl mb-2">🎬</div><h4 class="font-bold text-pink-600 text-lg">Noche de Pelis</h4><p class="text-xs text-gray-500">Tú eliges qué vemos.</p><div class="stamp">CANJEADO</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="coupon-4" class="coupon-container" onclick="canjearCupon('coupon-4')">
+                    <div class="coupon-inner">
+                        <div class="coupon-front"><div class="text-5xl animate-pulse">💝</div><p class="mt-2 font-bold text-pink-500">Toca para abrir</p></div>
+                        <div class="coupon-back">
+                            <div class="text-5xl mb-2">👑</div><h4 class="font-bold text-pink-600 text-lg">Tener la Razón</h4><p class="text-xs text-gray-500">Ganas una discusión.</p><div class="stamp">CANJEADO</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="coupon-5" class="coupon-container" onclick="canjearCupon('coupon-5')">
+                    <div class="coupon-inner">
+                        <div class="coupon-front"><div class="text-5xl animate-pulse">💝</div><p class="mt-2 font-bold text-pink-500">Toca para abrir</p></div>
+                        <div class="coupon-back">
+                            <div class="text-5xl mb-2">🍦</div><h4 class="font-bold text-pink-600 text-lg">Postre Sorpresa</h4><p class="text-xs text-gray-500">Vale por un antojo.</p><div class="stamp">CANJEADO</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="coupon-6" class="coupon-container" onclick="canjearCupon('coupon-6')">
+                    <div class="coupon-inner">
+                        <div class="coupon-front"><div class="text-5xl animate-pulse">💝</div><p class="mt-2 font-bold text-pink-500">Toca para abrir</p></div>
+                        <div class="coupon-back">
+                            <div class="text-5xl mb-2">❤️</div><h4 class="font-bold text-pink-600 text-lg">Beso Infinito</h4><p class="text-xs text-gray-500">Canjeable ahora mismo.</p><div class="stamp">CANJEADO</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="text-center w-full pb-40">
+            <h3 class="text-4xl handwritten text-pink-600 mb-10">Una cartita para mi vidita</h3>
+            <div class="envelope-wrapper giant" onclick="abrirSobre(this, 'corazones')">
+                <div class="envelope-back"></div>
+                <div class="letter">
+                   <div class="opacity-0 transition-opacity duration-500 delay-300 letter-inner letter-font text-gray-700 px-4">
+                        <p class="mb-4 font-bold">Para mi persona favorita:</p>
+                        <p class="text-lg leading-relaxed">
+                            Aquí escribirás todo lo que sientes. Este espacio es grande para que te inspires.
+                            Cuéntale lo mucho que la amas, lo feliz que te hace y todos los planes que tienen.
+                            <br><br>
+                            ¡Eres lo mejor de mi vida! ❤️
+                        </p>
+                   </div>
+                </div>
+                <div class="envelope-front-pocket"></div>
+                <div class="envelope-flap"></div>
+                <div class="seal">✉️</div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="text-center py-6 text-pink-300 text-xs font-mono relative z-10">
+        Hecho con ❤️ por AzathOS
+    </footer>
+
+    <script>
+        // --- DATA ---
+        const frasesAmor = ["Eres mi notificación favorita ❤️", "Contigo, cada día es un 'deploy' exitoso.", "Tus besos son mi mejor medicina.", "Me gustas más que el café.", "Eres el CSS de mi vida.", "Te amo más allá de la lógica.", "Siempre tú, siempre nosotros.", "Eres mi serendipia favorita.", "Tu sonrisa es mi código fuente."];
+        const trivia = [
+            { q: "¿Qué día nos hicimos novios?", o: ["10 de septiembre", "15 de agosto", "10 de octubre"], a: 0 },
+            { q: "¿Qué comimos juntos la primera vez?", o: ["Tacos", "Pizza", "Hamburguesas"], a: 0 },
+            { q: "¿A dónde fuimos el primer día?", o: ["Una tienda", "Un evento", "Un cumpleaños"], a: 0 },
+            { q: "¿Cuál es nuestra comida favorita?", o: ["Tacos", "Sushi", "Comida china"], a: 1 },
+            { q: "¿Qué día nos vimos por primera vez?", o: ["3 de noviembre", "2 de diciembre", "31 de octubre"], a: 2 },
+            { q: "¿A dónde fuimos la primera vez en Querétaro?", o: ["Mi casa", "Parque Qro 2000", "Plaza del Parque"], a: 1 },
+            { q: "¿Cómo se llama mi pez Betta?", o: ["Azul", "Rojo", "Pez"], a: 0 },
+            { q: "¿Qué estoy estudiando?", o: ["Ingeniería", "Medicina", "Derecho"], a: 0 },
+            { q: "¿A qué hora me mandaste el primer mensaje?", o: ["Mañana", "Tarde", "Noche"], a: 2 },
+            { q: "¿Me amas?", o: ["Sí", "Obvio", "Muchísimo"], a: 2 }
+        ];
+
+        // --- FUNCIONES ---
+        function showModal(text) { document.getElementById('modal-text').innerText = text; document.getElementById('love-modal').classList.add('modal-open'); confetti({ particleCount: 50, spread: 60, colors: ['#ff69b4'], zIndex: 200 }); }
+        function closeModal() { document.getElementById('love-modal').classList.remove('modal-open'); }
+        
+        // --- LOGICA CUPONERA ---
+        document.addEventListener("DOMContentLoaded", () => {
+            const redeemed = JSON.parse(localStorage.getItem('redeemedCoupons') || '[]');
+            redeemed.forEach(id => {
+                const el = document.getElementById(id);
+                if(el) el.classList.add('redeemed');
+            });
+        });
+
+        function canjearCupon(id) {
+            const el = document.getElementById(id);
+            if(el.classList.contains('redeemed')) return;
+            if(!confirm("¿Segura que quieres canjear este cupón? Se guardará como usado.")) return;
+            el.classList.add('redeemed');
+            confetti({ particleCount: 60, spread: 100, origin: { y: 0.6 }, colors: ['#ef4444', '#22c55e'] });
+            let redeemedList = JSON.parse(localStorage.getItem('redeemedCoupons') || '[]');
+            if(!redeemedList.includes(id)) {
+                redeemedList.push(id);
+                localStorage.setItem('redeemedCoupons', JSON.stringify(redeemedList));
+            }
+        }
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            const isSpecial = Math.random() < 0.20;
+            if(isSpecial) {
+                heart.innerHTML = '✨❤'; heart.className = 'falling-heart special-heart';
+                heart.onclick = function(e) { e.stopPropagation(); showModal(frasesAmor[Math.floor(Math.random()*frasesAmor.length)]); this.style.opacity='0'; setTimeout(()=>this.remove(),300); };
+            } else { heart.innerHTML = '❤'; heart.className = 'falling-heart'; }
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 3 + 4 + 's';
+            heart.style.fontSize = isSpecial ? (Math.random()*20+35+'px') : (Math.random()*20+15+'px');
+            document.getElementById('hearts-container').appendChild(heart);
+            setTimeout(() => heart.remove(), 8000);
+        }
+        setInterval(createHeart, 200);
+
+        // --- LOGICA TRIVIA ---
+        let qIdx = 0, isAnswered = false;
+        function renderQuiz() {
+            isAnswered = false;
+            const cur = trivia[qIdx];
+            document.getElementById('quiz-pregunta').innerText = cur.q;
+            document.getElementById('quiz-progreso').innerText = `${qIdx + 1} / 10`;
+            const container = document.getElementById('quiz-opciones');
+            container.innerHTML = '';
+            cur.o.forEach((opt, i) => {
+                const b = document.createElement('button');
+                b.className = "w-full bg-pink-50 hover:bg-pink-100 py-3 px-6 rounded-xl transition-all duration-300 text-pink-700 border border-pink-100 font-medium text-left flex items-center gap-3";
+                b.innerHTML = `<span class="w-6 h-6 rounded-full bg-white flex items-center justify-center text-xs text-pink-400 border border-pink-200">${String.fromCharCode(65+i)}</span> ${opt}`;
+                b.onclick = () => {
+                    if(isAnswered) return;
+                    if(i === cur.a) {
+                        isAnswered = true; b.classList.add('correct-anim');
+                        confetti({ particleCount: 40, spread: 60, colors: ['#22c55e', '#86efac'], origin: { y: 0.7 } });
+                        setTimeout(() => {
+                            qIdx++; if(qIdx < trivia.length) renderQuiz();
+                            else document.getElementById('quiz-container').innerHTML = "<div class='text-center py-10'><p class='handwritten text-5xl text-pink-600 mb-4 animate-bounce'>¡Felicidades!</p><p class='text-gray-600'>Contestaste todo bien mi amor ❤️</p></div>";
+                        }, 1200);
+                    } else { b.classList.add('shake'); setTimeout(() => b.classList.remove('shake'), 500); }
+                };
+                container.appendChild(b);
+            });
+        }
+        renderQuiz();
+
+        // --- INIT ---
+        const start = new Date(2023, 8, 10, 15, 20, 0); 
+        setInterval(() => {
+            const diff = new Date() - start;
+            document.getElementById('dias').innerText = Math.floor(diff/86400000);
+            document.getElementById('horas').innerText = Math.floor((diff/3600000)%24).toString().padStart(2,'0');
+            document.getElementById('minutos').innerText = Math.floor((diff/60000)%60).toString().padStart(2,'0');
+            document.getElementById('segundos').innerText = Math.floor((diff/1000)%60).toString().padStart(2,'0');
+        }, 1000);
+
+        function autoScroll(id, items) {
+            let i = 0; setInterval(() => { i = (i+1)%items; document.getElementById(id).style.transform = `translateX(-${i*100}%)`; }, 4000);
+        }
+        autoScroll('track1', 13); autoScroll('track2', 5); autoScroll('track3', 3);
+
+        function abrirSobre(el, effect) {
+            el.classList.add('open'); el.querySelector('.letter-inner').classList.remove('opacity-0');
+            if(effect === 'confeti') confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+            if(effect === 'corazones') {
+                const end = Date.now() + 3000;
+                (function frame() {
+                    confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#ff0000', '#ff69b4'] });
+                    confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#ff0000', '#ff69b4'] });
+                    if (Date.now() < end) requestAnimationFrame(frame);
+                }());
+            }
+        }
+    </script>
+</body>
+</html>

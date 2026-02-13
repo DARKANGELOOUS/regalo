@@ -1,0 +1,14 @@
+<section class="flex justify-center mb-16 w-full px-6">
+    <div class="bg-white p-4 rounded-full shadow-lg border border-pink-200 flex items-center gap-4 w-full max-w-md">
+        <div class="bg-pink-100 p-3 rounded-full text-pink-500">
+            🎵
+        </div>
+        <div class="flex-1">
+            <p class="text-sm font-bold text-gray-700">Nuestra Canción</p>
+            <audio controls class="w-full h-8 mt-1">
+                <source src="{{ url_for('static', filename='musica/cancion.mp3') }}" type="audio/mpeg">
+                Tu navegador no soporta audio.
+            </audio>
+        </div>
+    </div>
+</section>
