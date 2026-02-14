@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PARA EL AMORCITO DE MI VIDA</title>
+    <title>REGALO</title>
     
     <link rel="icon" href="/static/favicon.png" type="image/png">
 
@@ -56,25 +56,23 @@
         .modal-content { background: white; padding: 2.5rem; border-radius: 1.5rem; max-width: 90%; width: 400px; text-align: center; border: 4px solid #f9a8d4; box-shadow: 0 0 30px rgba(236,72,153,0.6); }
         .modal-open { display: flex; animation: fadeIn 0.3s ease; }
         
-        /* --- SOBRES (CORREGIDOS) --- */
+        /* --- SOBRES --- */
         .envelope-wrapper { position: relative; width: 300px; height: 200px; margin: 0 auto; cursor: pointer; transition: transform 0.3s; }
-        /* Clase especial para la carta final más grande */
-        .envelope-wrapper.giant { width: 360px; height: 240px; }
+        
+        /* CARTA GIGANTE */
+        .envelope-wrapper.giant { width: 360px; height: 270px; }
 
         .envelope-back { position: absolute; bottom: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #f9a8d4, #f472b6); border-radius: 0 0 10px 10px; z-index: 1; }
 
-        /* ESTADO CERRADO (GENÉRICO) */
+        /* ESTADO CERRADO */
         .letter {
             position: absolute; top: 10px; left: 5%; width: 90%;
-            height: 180px; /* Altura fija que cabe dentro del sobre estándar */
+            height: 180px; 
             background-color: #fff; z-index: 2; padding: 20px; text-align: center; transition: 0.8s ease; display: flex; align-items: center; justify-content: center; border-radius: 5px;
-            overflow: hidden; /* CRUCIAL: Ocultar el texto que sobra cuando está cerrada */
+            overflow: hidden; 
         }
-        /* ESTADO CERRADO (GIGANTE) - Ajustar altura para que quepa */
-        .envelope-wrapper.giant .letter {
-            height: 220px; /* Altura fija que cabe dentro del sobre gigante */
-            font-size: 1.2rem;
-        }
+        /* Ajuste CARTA GIGANTE CERRADA */
+        .envelope-wrapper.giant .letter { height: 250px; font-size: 1.2rem; top: 10px; }
 
         .envelope-front-pocket { position: absolute; bottom: 0; width: 100%; height: 80%; background-color: #f472b6; z-index: 3; clip-path: polygon(0 0, 50% 40%, 100% 0, 100% 100%, 0 100%); border-radius: 0 0 10px 10px; }
         .envelope-flap { position: absolute; top: 0; width: 100%; height: 100px; background-color: #ec4899; z-index: 4; clip-path: polygon(0 0, 100% 0, 50% 60%); transform-origin: top; transition: 0.6s; }
@@ -83,20 +81,8 @@
         /* --- ESTADOS ABIERTOS --- */
         .open .envelope-flap { transform: rotateX(180deg); z-index: 0; }
         .open .seal { display: none; }
-        
-        /* Abierto Estándar */
-        .open .letter {
-            transform: translateY(-130px); z-index: 5;
-            height: auto; /* Dejar que crezca */
-            min-height: 220px; /* Altura mínima al abrir */
-            overflow: visible; /* Mostrar todo el contenido */
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-        }
-        /* Abierto Gigante */
-        .open.giant .letter {
-            transform: translateY(-180px); /* Subir más */
-            min-height: 350px; /* Altura mínima mayor al abrir */
-        }
+        .open .letter { transform: translateY(-130px); z-index: 5; height: auto; min-height: 220px; overflow: visible; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .open.giant .letter { transform: translateY(-240px); min-height: 600px; }
 
         /* --- CARRUSEL Y TRIVIA --- */
         .carousel-track { display: flex; transition: transform 0.5s ease-in-out; height: 100%; }
@@ -132,7 +118,7 @@
                 <img src="/static/fotos/momentos/principal.webp" class="heart-mask relative w-64 h-64 md:w-80 md:h-80 object-cover mx-auto">
             </div>
             <h1 class="text-5xl md:text-7xl handwritten text-pink-600 mb-4 font-bold">¡Hola Amorcito!</h1>
-            <p class="text-gray-600 italic text-xl">"Eres el mejor commit que la vida ha hecho en mi repositorio" 💖</p>
+            <p class="text-gray-600 italic text-xl">Eres el mejor commit que la vida ha hecho en mi repositorio</p>
         </header>
 
         <section class="mb-24 text-center">
@@ -141,7 +127,7 @@
                 <div class="envelope-back"></div>
                 <div class="letter">
                     <div class="opacity-0 transition-opacity duration-500 delay-300 letter-inner letter-font">
-                        ¡Bienvenida a nuestra historia! <br> Prepárate para revivir nuestros mejores momentos. <br> ❤️
+                        ¡Bienvenida a nuestra historia! <br> Prepárate para revivir nuestros mejores momentos. <br> Te dejé unas canciones que me recuerdan a tí.❤️
                     </div>
                 </div>
                 <div class="envelope-front-pocket"></div>
@@ -166,7 +152,7 @@
         </section>
 
         <section class="w-full max-w-md mb-24 shadow-2xl rounded-[12px] overflow-hidden">
-            <iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/track/4ClMZDRwBmwGJKN6qQLVPY?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            <iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/track/4YrChHFqaTDNsHD6rtLpqn?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
         </section>
 
         <section class="mb-24 w-full px-4 max-w-lg mx-auto text-center">
@@ -181,7 +167,7 @@
         </section>
 
         <section class="w-full max-w-md mb-24 shadow-2xl rounded-[12px] overflow-hidden">
-            <iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/track/4ClMZDRwBmwGJKN6qQLVPY?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            <iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/track/3Tshb8DCw7TEdnNMJc8Yuw?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
         </section>
 
         <section class="mb-24 w-full px-4 max-w-lg mx-auto text-center">
@@ -208,7 +194,7 @@
 
         <section class="mb-32 w-full px-4 max-w-5xl mx-auto text-center">
             <h3 class="text-4xl handwritten text-pink-600 mb-4">Tus Regalos Especiales 🎁</h3>
-            <p class="text-gray-500 mb-8 italic">Haz clic para descubrir tus premios (¡Quedan guardados!)</p>
+            <p class="text-gray-500 mb-8 italic">Haz clic para descubrir tus premios</p>
             <div class="grid grid-cols-2 lg:grid-cols-3 gap-6">
                 
                 <div id="coupon-1" class="coupon-container" onclick="canjearCupon('coupon-1')">
@@ -224,7 +210,7 @@
                     <div class="coupon-inner">
                         <div class="coupon-front"><div class="text-5xl animate-pulse">💝</div><p class="mt-2 font-bold text-pink-500">Toca para abrir</p></div>
                         <div class="coupon-back">
-                            <div class="text-5xl mb-2">🍕</div><h4 class="font-bold text-pink-600 text-lg">Cena a Elección</h4><p class="text-xs text-gray-500">Yo invito (o cocino).</p><div class="stamp">CANJEADO</div>
+                            <div class="text-5xl mb-2">🍕</div><h4 class="font-bold text-pink-600 text-lg">Cena a Elección</h4><p class="text-xs text-gray-500">Yo invito.</p><div class="stamp">CANJEADO</div>
                         </div>
                     </div>
                 </div>
@@ -233,7 +219,7 @@
                     <div class="coupon-inner">
                         <div class="coupon-front"><div class="text-5xl animate-pulse">💝</div><p class="mt-2 font-bold text-pink-500">Toca para abrir</p></div>
                         <div class="coupon-back">
-                            <div class="text-5xl mb-2">🎬</div><h4 class="font-bold text-pink-600 text-lg">Noche de Pelis</h4><p class="text-xs text-gray-500">Tú eliges qué vemos.</p><div class="stamp">CANJEADO</div>
+                            <div class="text-5xl mb-2">🎬</div><h4 class="font-bold text-pink-600 text-lg">Noche de Pelis</h4><p class="text-xs text-gray-500">Tú escojes la peli.</p><div class="stamp">CANJEADO</div>
                         </div>
                     </div>
                 </div>
@@ -242,7 +228,7 @@
                     <div class="coupon-inner">
                         <div class="coupon-front"><div class="text-5xl animate-pulse">💝</div><p class="mt-2 font-bold text-pink-500">Toca para abrir</p></div>
                         <div class="coupon-back">
-                            <div class="text-5xl mb-2">👑</div><h4 class="font-bold text-pink-600 text-lg">Tener la Razón</h4><p class="text-xs text-gray-500">Ganas una discusión.</p><div class="stamp">CANJEADO</div>
+                            <div class="text-5xl mb-2">👑</div><h4 class="font-bold text-pink-600 text-lg">Tener la Razón</h4><p class="text-xs text-gray-500">Ganas una discusión. (Al fin)</p><div class="stamp">CANJEADO</div>
                         </div>
                     </div>
                 </div>
@@ -251,7 +237,7 @@
                     <div class="coupon-inner">
                         <div class="coupon-front"><div class="text-5xl animate-pulse">💝</div><p class="mt-2 font-bold text-pink-500">Toca para abrir</p></div>
                         <div class="coupon-back">
-                            <div class="text-5xl mb-2">🍦</div><h4 class="font-bold text-pink-600 text-lg">Postre Sorpresa</h4><p class="text-xs text-gray-500">Vale por un antojo.</p><div class="stamp">CANJEADO</div>
+                            <div class="text-5xl mb-2">🍦</div><h4 class="font-bold text-pink-600 text-lg">Postre Sorpresa</h4><p class="text-xs text-gray-500">Vale por un postrecito a elección.</p><div class="stamp">CANJEADO</div>
                         </div>
                     </div>
                 </div>
@@ -260,7 +246,7 @@
                     <div class="coupon-inner">
                         <div class="coupon-front"><div class="text-5xl animate-pulse">💝</div><p class="mt-2 font-bold text-pink-500">Toca para abrir</p></div>
                         <div class="coupon-back">
-                            <div class="text-5xl mb-2">❤️</div><h4 class="font-bold text-pink-600 text-lg">Beso Infinito</h4><p class="text-xs text-gray-500">Canjeable ahora mismo.</p><div class="stamp">CANJEADO</div>
+                            <div class="text-5xl mb-2">❤️</div><h4 class="font-bold text-pink-600 text-lg">Los besos que tú quieras</h4><p class="text-xs text-gray-500">Canjeable ahora mismo.</p><div class="stamp">CANJEADO</div>
                         </div>
                     </div>
                 </div>
@@ -268,16 +254,20 @@
             </div>
         </section>
 
-        <section class="text-center w-full pb-40">
+        <section class="text-center w-full pb-24">
             <h3 class="text-4xl handwritten text-pink-600 mb-10">Una cartita para mi vidita</h3>
             <div class="envelope-wrapper giant" onclick="abrirSobre(this, 'corazones')">
                 <div class="envelope-back"></div>
                 <div class="letter">
                    <div class="opacity-0 transition-opacity duration-500 delay-300 letter-inner letter-font text-gray-700 px-4">
-                        <p class="mb-4 font-bold">Para mi persona favorita:</p>
+                        <p class="mb-4 font-bold">Para mi amorcito.</p>
                         <p class="text-lg leading-relaxed">
-                            Aquí escribirás todo lo que sientes. Este espacio es grande para que te inspires.
-                            Cuéntale lo mucho que la amas, lo feliz que te hace y todos los planes que tienen.
+                            Gracias por estar conmigo otro 14 de febreo, me hace muy feliz poder compartir contigo estos días que son tan especiales.
+                            Quiero agradecerte por llenarme la vida de felicidad y de mucho amor, de verdad que me encanta compartir mi vida contigo
+                            De verdad quiero que lo nuestro funcione y que por siempre podamos estar juntos para poder hacer crecer nuestra familia
+                            No me veo sin tí, lo único en lo que pienso es como sería nuestra vida en un futuro y me hace muy feliz verte conmigo
+                            Si tú me lo permites te quiero tener conmigo siempre y enseñarte lo bonito que es amarnos.
+                            Te amo con todo mi corazón mi vidita, eres el mejor regalo que la vida me ha dado
                             <br><br>
                             ¡Eres lo mejor de mi vida! ❤️
                         </p>
@@ -286,6 +276,20 @@
                 <div class="envelope-front-pocket"></div>
                 <div class="envelope-flap"></div>
                 <div class="seal">✉️</div>
+            </div>
+        </section>
+
+        <section class="w-full max-w-2xl mb-16 shadow-2xl rounded-[12px] overflow-hidden mx-auto">
+            <h3 class="text-3xl handwritten text-pink-500 mb-6 text-center">Nuestra Playlist Especial 🎶</h3>
+            <iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/playlist/1QQlq6mzAMZZu5s8cSAQwO?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+        </section>
+
+        <section class="bouquet-section flex justify-center pb-32">
+            <div class="relative w-64 md:w-80 cursor-pointer group" onclick="confetti({ particleCount: 150, spread: 100, origin: { y: 0.8 }, colors: ['#ffb7c5', '#ffffff'] })">
+                <img src="/static/fotos/ramo.png" alt="Ramo de flores" class="w-full h-auto drop-shadow-2xl transition-transform duration-500 group-hover:scale-105 group-hover:-rotate-2">
+                <div class="absolute -bottom-10 w-full text-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <span class="bg-white/80 px-4 py-1 rounded-full text-pink-600 font-bold shadow-sm">¡Para ti! 💐</span>
+                </div>
             </div>
         </section>
 
